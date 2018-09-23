@@ -5,6 +5,12 @@ import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.naturalli.NaturalLogicAnnotations;
 import edu.stanford.nlp.util.CoreMap;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.vocabulary.RDF;
 
 import java.util.*;
 
@@ -19,53 +25,26 @@ public class App {
         Annotation doc = new Annotation(FilmPlotText.JURASSIC_PARK_PLOT);
         pipeline.annotate(doc);
 
-        // Create hash map of entities to their types
-        Map<String, String> entitiesToTypes = new HashMap<>();
-        for (CoreMap sentence : doc.get(CoreAnnotations.SentencesAnnotation.class)) {
-            for (CoreMap entityMention : sentence.get(CoreAnnotations.MentionsAnnotation.class)) {
-                entitiesToTypes.put(
-                        entityMention.get(CoreAnnotations.TextAnnotation.class),
-                        entityMention.get(CoreAnnotations.NamedEntityTagAnnotation.class));
-            }
-        }
+        Map<String, String> entitiesToTypes = AnnotationExtraction.extractEntitiesAndTheirTypes(doc);
+        Loggers.logEntities(entitiesToTypes);
 
-        System.out.println("----------ENTITIES--------------");
-        for (Map.Entry<String, String> entry : entitiesToTypes.entrySet()) {
-            System.out.println(entry);
-        }
-
-        // Extract the relationships in the document
-        List<RelationTriple> triples = new ArrayList<>();
-        for (CoreMap sentence : doc.get(CoreAnnotations.SentencesAnnotation.class)) {
-            // Get the OpenIE triples for the sentence
-            triples.addAll(sentence.get(NaturalLogicAnnotations.RelationTriplesAnnotation.class));
-        }
+        List<RelationTriple> triples = AnnotationExtraction.extractRelationships(doc);
+        Loggers.logTriples(triples);
 
         // Remove triples where either end doesn't conform to a named entity type
-        List<RelationTriple> filteredTriples = new ArrayList<>();
-        for (RelationTriple triple : triples) {
-            if (entitiesToTypes.get(triple.subjectLemmaGloss()) != null &&
-                    entitiesToTypes.get(triple.objectLemmaGloss()) != null) {
-                filteredTriples.add(triple);
-            }
-        }
-        System.out.println("----------UNFILTERED--------------");
-        // Print the unfilteredtriples
-        for (RelationTriple triple : triples) {
-            System.out.println(triple.confidence + "," +
-                    triple.subjectLemmaGloss() + "," +
-                    triple.relationLemmaGloss() + "," +
-                    triple.objectLemmaGloss());
-        }
+        List<RelationTriple> filteredTriples =
+                AnnotationExtraction.filterRelationshipsBasedOnEntities(triples, entitiesToTypes);
+        Loggers.logTriplesWithEntityTypes(filteredTriples, entitiesToTypes);
 
-        System.out.println("-----------FILTERED-------------");
+        Model model = ModelFactory.createDefaultModel();
 
-        // Print the triples
-        for (RelationTriple triple : filteredTriples) {
-            System.out.println(triple.confidence + "," +
-                    triple.subjectLemmaGloss() + "(" + entitiesToTypes.get(triple.subjectLemmaGloss()) + ")," +
-                    triple.relationGloss() + "," +
-                    triple.objectLemmaGloss() + "(" + entitiesToTypes.get(triple.objectLemmaGloss()) + ")");
-        }
+        Resource alice = ResourceFactory.createResource("http://example.org/alice");
+        Resource bob = ResourceFactory.createResource("http://example.org/bob");
+        model.add(alice, RDF.type, FOAF.Person);
+        model.add(alice, FOAF.name, "Alice");
+        model.add(alice, FOAF.mbox, ResourceFactory.createResource("mailto:alice@example.org"));
+        model.add(alice, FOAF.knows, bob);
+
+        model.write(System.out, "TURTLE");
     }
 }
