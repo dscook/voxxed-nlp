@@ -1,0 +1,70 @@
+<http://www.bitcat.co.uk/Muldoon>
+        a       <http://www.bitcat.co.uk/ontology/PERSON> ;
+        <http://www.bitcat.co.uk/be_catch_off>
+                <http://www.bitcat.co.uk/guard> ;
+        <http://www.bitcat.co.uk/meanwhile_be_catch_off>
+                <http://www.bitcat.co.uk/guard> .
+
+<http://www.bitcat.co.uk/storm>
+        a       <http://www.bitcat.co.uk/ontology/CAUSE_OF_DEATH> .
+
+<http://www.bitcat.co.uk/Isla>
+        a       <http://www.bitcat.co.uk/ontology/CITY> .
+
+<http://www.bitcat.co.uk/Lex>
+        a       <http://www.bitcat.co.uk/ontology/PERSON> ;
+        <http://www.bitcat.co.uk/be_grandchild_of>
+                <http://www.bitcat.co.uk/Hammond> .
+
+<http://www.bitcat.co.uk/Industrialist>
+        a       <http://www.bitcat.co.uk/ontology/TITLE> .
+
+<http://www.bitcat.co.uk/guard>
+        a       <http://www.bitcat.co.uk/ontology/TITLE> .
+
+<http://www.bitcat.co.uk/Grant>
+        a                             <http://www.bitcat.co.uk/ontology/PERSON> ;
+        <http://www.bitcat.co.uk/be>  <http://www.bitcat.co.uk/Tim> , <http://www.bitcat.co.uk/Lex> , <http://www.bitcat.co.uk/paleontologist> ;
+        <http://www.bitcat.co.uk/leave>
+                <http://www.bitcat.co.uk/Tim> , <http://www.bitcat.co.uk/Lex> ;
+        <http://www.bitcat.co.uk/leave_inside>
+                <http://www.bitcat.co.uk/Tim> , <http://www.bitcat.co.uk/Lex> ;
+        <http://www.bitcat.co.uk/look_for>
+                <http://www.bitcat.co.uk/Sattler> .
+
+<http://www.bitcat.co.uk/mathematician>
+        a       <http://www.bitcat.co.uk/ontology/TITLE> .
+
+<http://www.bitcat.co.uk/Malcolm>
+        a                             <http://www.bitcat.co.uk/ontology/PERSON> ;
+        <http://www.bitcat.co.uk/be>  <http://www.bitcat.co.uk/mathematician> .
+
+<http://www.bitcat.co.uk/lawyer>
+        a       <http://www.bitcat.co.uk/ontology/TITLE> .
+
+<http://www.bitcat.co.uk/Sattler>
+        a       <http://www.bitcat.co.uk/ontology/PERSON> .
+
+<http://www.bitcat.co.uk/Hammond>
+        a                             <http://www.bitcat.co.uk/ontology/PERSON> ;
+        <http://www.bitcat.co.uk/'s_grandchild_be>
+                <http://www.bitcat.co.uk/Lex> ;
+        <http://www.bitcat.co.uk/be>  <http://www.bitcat.co.uk/Industrialist> .
+
+<http://www.bitcat.co.uk/Tim>
+        a       <http://www.bitcat.co.uk/ontology/PERSON> .
+
+<http://www.bitcat.co.uk/paleontologist>
+        a       <http://www.bitcat.co.uk/ontology/TITLE> .
+
+<http://www.bitcat.co.uk/Nublar>
+        a       <http://www.bitcat.co.uk/ontology/LOCATION> ;
+        <http://www.bitcat.co.uk/be_as>
+                <http://www.bitcat.co.uk/storm> ;
+        <http://www.bitcat.co.uk/be_on>
+                <http://www.bitcat.co.uk/Isla> .
+
+<http://www.bitcat.co.uk/Gennaro>
+        a       <http://www.bitcat.co.uk/ontology/PERSON> ;
+        <http://www.bitcat.co.uk/be_by>
+                <http://www.bitcat.co.uk/lawyer> .
