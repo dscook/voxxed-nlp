@@ -2,8 +2,10 @@ package uk.co.bitcat;
 
 import edu.stanford.nlp.ie.util.RelationTriple;
 import edu.stanford.nlp.pipeline.*;
+import uk.co.bitcat.model.RelationTripleWithSpan;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class App {
 
@@ -19,16 +21,20 @@ public class App {
         Map<String, String> entitiesToTypes = AnnotationExtraction.extractEntitiesAndTheirTypes(doc);
         Loggers.logEntities(entitiesToTypes);
 
-        List<RelationTriple> triples = AnnotationExtraction.extractRelationships(doc);
-        Loggers.logTriples(triples);
+        List<RelationTripleWithSpan> triples = AnnotationExtraction.extractRelationships(doc);
+        Loggers.logTriples(getRawTriples(triples));
 
         // Remove triples where either end doesn't conform to a named entity type
-        List<RelationTriple> filteredTriples =
+        List<RelationTripleWithSpan> filteredTriples =
                 AnnotationExtraction.filterRelationshipsBasedOnEntities(triples, entitiesToTypes);
-        Loggers.logTriplesWithEntityTypes(filteredTriples, entitiesToTypes);
+        Loggers.logTriplesWithEntityTypes(getRawTriples(filteredTriples), entitiesToTypes);
 
         // Create and write an RDF model to disk
-        RdfModelBuilder model = new RdfModelBuilder(filteredTriples, entitiesToTypes);
+        RdfModelBuilder model = new RdfModelBuilder(getRawTriples(filteredTriples), entitiesToTypes);
         model.createRdfModel();
+    }
+
+    private static List<RelationTriple> getRawTriples(List<RelationTripleWithSpan> triplesWithSpans) {
+        return triplesWithSpans.stream().map(t -> t.triple).collect(Collectors.toList());
     }
 }

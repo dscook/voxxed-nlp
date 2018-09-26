@@ -1,7 +1,6 @@
 package uk.co.bitcat;
 
 import edu.stanford.nlp.ie.util.RelationTriple;
-import edu.stanford.nlp.util.StringUtils;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 
