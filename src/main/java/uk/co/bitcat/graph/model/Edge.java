@@ -12,7 +12,7 @@ public class Edge {
     public String sentence;
 
     public Edge(String source, String target, String label, String sentence) throws UnsupportedEncodingException {
-        String idString = source + target + label;
+        String idString = source + target + label + sentence;
         this.id = UUID.nameUUIDFromBytes(idString.getBytes("UTF-8")).toString();;
         this.source = source;
         this.target = target;
