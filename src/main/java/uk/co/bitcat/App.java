@@ -2,7 +2,10 @@ package uk.co.bitcat;
 
 import edu.stanford.nlp.ie.util.RelationTriple;
 import edu.stanford.nlp.pipeline.*;
+import uk.co.bitcat.graph.GraphBuilder;
+import uk.co.bitcat.helpers.Loggers;
 import uk.co.bitcat.model.RelationTripleWithSpan;
+import uk.co.bitcat.rdf.RdfModelBuilder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,8 +33,12 @@ public class App {
         Loggers.logTriplesWithEntityTypes(getRawTriples(filteredTriples), entitiesToTypes);
 
         // Create and write an RDF model to disk
-        RdfModelBuilder model = new RdfModelBuilder(getRawTriples(filteredTriples), entitiesToTypes);
-        model.createRdfModel();
+        RdfModelBuilder rdfModelBuilder = new RdfModelBuilder(getRawTriples(filteredTriples), entitiesToTypes);
+        rdfModelBuilder.createRdfModel();
+
+        // Create and write a JSON graph file
+        GraphBuilder graphBuilder = new GraphBuilder(filteredTriples, entitiesToTypes);
+        graphBuilder.createGraph();
     }
 
     private static List<RelationTriple> getRawTriples(List<RelationTripleWithSpan> triplesWithSpans) {

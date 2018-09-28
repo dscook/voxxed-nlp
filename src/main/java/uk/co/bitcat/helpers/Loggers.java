@@ -1,4 +1,4 @@
-package uk.co.bitcat;
+package uk.co.bitcat.helpers;
 
 import edu.stanford.nlp.ie.util.RelationTriple;
 

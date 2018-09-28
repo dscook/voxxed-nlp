@@ -1,12 +1,12 @@
-package uk.co.bitcat;
+package uk.co.bitcat.rdf;
 
 import edu.stanford.nlp.ie.util.RelationTriple;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
+import uk.co.bitcat.helpers.Normalisers;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,8 @@ public class RdfModelBuilder {
         for (RelationTriple triple : triples) {
             Resource subject = retrieveExistingResourceOrCreateNew(triple.subjectGloss(), true);
             Resource object = retrieveExistingResourceOrCreateNew(triple.objectGloss(), true);
-            Property predicate = model.createProperty(NAMESPACE + formatPredicate(triple.relationLemmaGloss()));
+            Property predicate = model.createProperty(
+                    NAMESPACE + Normalisers.whitespacesToUnderscores(triple.relationLemmaGloss()));
             model.add(subject, predicate, object);
         }
 
@@ -45,8 +46,7 @@ public class RdfModelBuilder {
     }
 
     private Resource retrieveExistingResourceOrCreateNew(String resource, boolean addToModel) {
-        // For the purposes of the presentation, slight hack to take surnames only
-        String sanitisedResource = resource.substring(resource.lastIndexOf(" ")+1);
+        String sanitisedResource = Normalisers.normaliseNames(resource);
 
         Resource rdfResource = uriToResource.get(sanitisedResource);
         if (rdfResource == null) {
@@ -61,16 +61,5 @@ public class RdfModelBuilder {
             }
         }
         return rdfResource;
-    }
-
-    private static String formatPredicate(String predicate) {
-        List<String> splitString = Arrays.asList(predicate.split(" "));
-        return splitString.stream().reduce("", (a, b) -> {
-            if (!a.isEmpty()) {
-                return a + "_" + b;
-            } else {
-                return b;
-            }
-        });
     }
 }
