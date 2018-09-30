@@ -31,8 +31,14 @@ public class GraphBuilder {
         for (RelationTripleWithSpan tripleWithSpan : triples) {
             Node sourceNode = createNode(tripleWithSpan.triple.subjectLemmaGloss(), graph);
             Node targetNode = createNode(tripleWithSpan.triple.objectLemmaGloss(), graph);
+
             String sentence = FilmPlotText.JURASSIC_PARK_PLOT.substring(
                     tripleWithSpan.sentenceSpan.first, tripleWithSpan.sentenceSpan.second);
+
+            sentence = highlightPhrase(tripleWithSpan.triple.subjectGloss(), sentence);
+            sentence = highlightPhrase(" " + tripleWithSpan.triple.relationGloss() + " ", sentence);
+            sentence = highlightPhrase(tripleWithSpan.triple.objectGloss(), sentence);
+
             Edge edge = new Edge(
                     sourceNode.id,
                     targetNode.id,
@@ -53,5 +59,9 @@ public class GraphBuilder {
         Node node = new Node(normalisedNodeName, entitiesToTypes.get(nodeName));
         graph.addNode(node);
         return node;
+    }
+
+    private String highlightPhrase(String phrase, String sentence) {
+        return sentence.replaceAll(phrase, "<strong>" + phrase + "</strong>");
     }
 }
